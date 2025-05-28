@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ruleta de Premios</title>
+  <link rel="stylesheet" href="ruleta.css">
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- Sección izquierda: ruleta -->
+    <div class="ruleta-container">
+      <div class="ruleta" id="ruleta">
+        <div class="label" style="--i:0;"><span>1</span></div>
+        <div class="label" style="--i:1;"><span>2</span></div>
+        <div class="label" style="--i:2;"><span>3</span></div>
+        <div class="label" style="--i:3;"><span>4</span></div>
+        <div class="label" style="--i:4;"><span>5</span></div>
+        <div class="label" style="--i:5;"><span>6</span></div>
+        <div class="label" style="--i:6;"><span>7</span></div>
+        <div class="label" style="--i:7;"><span>8</span></div>
+        <div class="label" style="--i:8;"><span>9</span></div>
+        <div class="label" style="--i:9;"><span>10</span></div>
+      </div>
+      <div class="flecha"></div>
+      <div class="centro">
+        <img src="Vipizza.png" alt="Logo Vipizza" class="logo">
+      </div>
+    </div>
+
+    <!-- Sección derecha: lista de premios y botón -->
+    <div class="info-container">
+      <ol class="premios-list">
+        <h2>Premios</h2>
+        <li>2 x 1</li>
+        <li>1 Calzone</li>
+        <li>Gracias por participar</li>
+        <li>1 canelitas</li>
+        <li>Q. 20 descuento</li>
+        <li>1 cheese fingers</li>
+        <li>1 cupón para agregar border a una pizza</li>
+        <li>2 x 1</li>
+        <li>Gracias por participar</li>
+        <li>1 pizza de Q. 40</li>
+      </ol>
+      <div class="button-container">
+        <button id="girarBtn">GIRAR</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CDN SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- CDN canvas-confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+  <!-- Tu script -->
+  <script src="ruleta.js"></script>
+</body>
+</html>

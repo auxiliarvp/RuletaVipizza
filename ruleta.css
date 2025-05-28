@@ -1,0 +1,294 @@
+/* ==== Estilos originales ==== */
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafaf9;
+  font-family: Arial, sans-serif;
+}
+
+.contenedor {
+  position: relative;
+  text-align: center;
+}
+
+.ruleta {
+  width: 900px;
+  height: 900px;
+  border-radius: 50%;
+  border: 10px solid #ff7043;
+  /* 10 segmentos de 36° cada uno, alternando naranja/blanco */
+  background: conic-gradient(
+    #ffa726 0deg 36deg,    /* 1 */
+    #ffffff 36deg 72deg,    /* 2 */
+    #ffa726 72deg 108deg,   /* 3 */
+    #ffffff 108deg 144deg,  /* 4 */
+    #ffa726 144deg 180deg,  /* 5 */
+    #ffffff 180deg 216deg,  /* 6 */
+    #ffa726 216deg 252deg,  /* 7 */
+    #ffffff 252deg 288deg,  /* 8 */
+    #ffa726 288deg 324deg,  /* 9 */
+    #ffffff 324deg 360deg   /* 10 */
+  );
+  position: relative;
+  transition: transform 5s cubic-bezier(0.33,1,0.68,1);
+}
+
+.flecha {
+  position: absolute;
+  bottom: 10px;               /* sitúa la flecha justo fuera del círculo */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  /* triángulo apuntando hacia arriba */
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 60px solid #ff7043;  /* altura más grande */
+  z-index: 10;
+}
+
+
+.label {
+  /* Ángulo central de cada porción: offset(18.25º) + i*stride(36.5º) */
+  --offset: 18.25deg;
+  --stride: 36.5deg;
+  --angle: calc(var(--offset) + var(--i) * var(--stride));
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;               /* no importa el ancho aquí */
+  height: 0;              /* todo lo hará el span */
+  transform-origin: center center;
+
+  /* 1) rota al ángulo correcto
+     2) desplaza radialmente (ajusta -380px según radio)
+  */
+  transform:
+    rotate(var(--angle))
+    translateY(-380px);
+
+  /* sin animaciones propias */
+  transition: none;
+  will-change: transform;
+}
+
+.ruleta .label span {
+  position: absolute;
+  top: 50%;               /* empieza en el centro vertical del label */
+  left: 50%;              /* y en el centro horizontal */
+  /* centramos el span a su propia mitad */
+  transform:
+    translate(-50%, -50%)
+    rotate(calc(-1 * var(--angle)));
+
+  /* estilo del número */
+  font-size: 120px;       /* ajústalo al tamaño deseado */
+  font-weight: bold;
+  color: inherit;
+  white-space: nowrap;
+}
+
+
+/* Color de texto según índice (odd=blanco sobre naranja; even=marrón sobre blanco) */
+.label:nth-of-type(odd) {
+  color: #ffffff;
+}
+.label:nth-of-type(even) {
+  color: #57281e;
+}
+
+.centro {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 170px;
+  height: 170px;
+  background: #ffffff;
+  border-radius: 50%;
+  overflow: hidden;    /* recorta todo lo que sobresalga */
+  z-index: 5;
+  display: flex;       /* para centrar la imagen fácilmente */
+  align-items: center;
+  justify-content: center;
+}
+
+.centro .logo {
+  width: 90%;
+  height: 90%;
+  object-fit: cover;   /* cubre todo el círculo manteniendo proporción */
+  border-radius: 50%;  /* bordes redondeados que coinciden con el círculo */
+}
+
+/* Para clavar manualmente cada uno */
+.ruleta .label:nth-of-type(1) span {
+  transform: translate(-50%, -50%) rotate(calc(-1*var(--angle))) translateX(3px) translateY(10px);
+}
+.ruleta .label:nth-of-type(2) span {
+  transform: translate(-50%, -50%) rotate(calc(-1*var(--angle))) translateX(-15px) translateY(-15px);
+}
+.ruleta .label:nth-of-type(3) span {
+  transform: translate(-50%, -50%) rotate(calc(-1*var(--angle))) translateX(15px) translateY(-10px);
+}
+.ruleta .label:nth-of-type(4) span {
+  transform: translate(-50%, -50%) rotate(calc(-1*var(--angle))) translateX(-5px) translateY(-5px);
+}
+.ruleta .label:nth-of-type(5) span {
+  transform: translate(-50%, -50%) rotate(calc(-1*var(--angle))) translateX(0px) translateY(0px);
+}
+.ruleta .label:nth-of-type(6) span {
+  transform: translate(-50%, -50%) rotate(calc(-1*var(--angle))) translateX(5px) translateY(10px);
+}
+.ruleta .label:nth-of-type(7) span {
+  transform: translate(-50%, -50%) rotate(calc(-1*var(--angle))) translateX(10px) translateY(25px);
+}
+.ruleta .label:nth-of-type(8) span {
+  transform: translate(-50%, -50%) rotate(calc(-1*var(--angle))) translateX(-15px) translateY(20px);
+}
+.ruleta .label:nth-of-type(9) span {
+  transform: translate(-50%, -50%) rotate(calc(-1*var(--angle))) translateX(-20px) translateY(30px);
+}
+.ruleta .label:nth-of-type(10) span {
+  transform: translate(-50%, -50%) rotate(calc(-1*var(--angle))) translateX(-25px) translateY(35px);
+}
+
+/* ==== Ajustes de maquetación ==== */
+
+.app-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 0 20px;
+}
+
+.ruleta-container {
+  position: relative;
+  flex: 0 0 auto;
+  margin-right: 60px;
+}
+
+.info-container {
+  flex: 0 0 auto;
+  margin-left: 60px;
+  text-align: left;
+}
+
+.premios-list {
+  padding-left: 20px;
+  margin: 0;
+}
+
+/* Centramos el botón debajo */
+.button-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ==== Nuevos estilos para lista y botón ==== */
+
+/* ==== Título de premios mejorado ==== */
+.premios-list h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #ff7043, #ffa726);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+/* Línea decorativa bajo el título */
+.premios-list h2::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: #ffa726;
+  margin: 8px auto 0;
+  border-radius: 2px;
+}
+
+
+/* Ítems en forma de tarjetas con acento de color */
+.premios-list li {
+  list-style: none;
+  font-size: 1.4rem;
+  padding: 12px 20px;
+  margin-bottom: 10px;
+  background: #ffffff;
+  border-left: 6px solid #ff7043;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  color: #57281e;
+}
+
+/* Botón grande, con degradado y efecto hover/active */
+#girarBtn {
+  background: linear-gradient(45deg, #ff7043, #ffa726);
+  color: #ffffff;
+  font-size: 1.3rem;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#girarBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+
+#girarBtn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+/* ==== Numeración dentro de la franja naranja ==== */
+.premios-list {
+  counter-reset: premios;             /* inicia el contador */
+}
+
+.premios-list li {
+  counter-increment: premios;         /* avanza el contador */
+  position: relative;                 /* para posicionar el ::before */
+  list-style: none;                   /* ya lo tenías */
+  padding-left: 60px;                 /* espacio para la franja+ número */
+  border-left: none;                  /* quitamos la línea original */
+  margin-bottom: 10px;                /* igual que antes */
+}
+
+.premios-list li::before {
+  content: counter(premios);          /* inserta el número */
+  position: absolute;
+  left: 0;                            /* pegado al borde del li */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;                        /* ancho de la franja “gruesa” */
+  height: 40px;                       /* igual alto para centrar */
+  background: #ff7043;                /* mismo naranja */
+  color: #ffffff;                     /* número en blanco */
+  display: flex;                      /* centrar texto */
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 4px;                 /* esquinas suaves */
+}
+
+/* Premio tachado tras 2 apariciones */
+.premios-list li.unavailable {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
