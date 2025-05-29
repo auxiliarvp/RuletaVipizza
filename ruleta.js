@@ -1,18 +1,19 @@
-// ruleta.js
-// Asegúrate de tener SweetAlert2 y canvas-confetti cargados antes en tu HTML.
 
 document.addEventListener("DOMContentLoaded", () => {
-  const lis     = Array.from(document.querySelectorAll('.premios-list li'));
-  const premios = lis.map(li => li.textContent.trim());
-  const N       = premios.length;             // 10 segmentos
-  const degSeg  = 360 / N;
+  // 1) Leemos los textos de los premios desde el DOM
+  const premios = Array.from(
+    document.querySelectorAll('.premios-list li')
+  ).map(li => li.textContent.trim());
+  const N      = premios.length;        // número de segmentos
+  const degSeg = 360 / N;               // ángulo por segmento
 
   const ruleta   = document.getElementById("ruleta");
   const girarBtn = document.getElementById("girarBtn");
 
   let girando    = false;
-  let anguloBase = 0;
+  let anguloBase = 0; // posición actual normalizada [0..360)
 
+  // Función para extraer el ángulo real aplicado al elemento
   function getRotationAngle(el) {
     const tr = getComputedStyle(el).transform;
     if (tr === "none") return 0;
@@ -21,44 +22,42 @@ document.addEventListener("DOMContentLoaded", () => {
     return ang < 0 ? ang + 360 : ang;
   }
 
-  // Lleva cuántas veces salió cada premio
-  const counts = Array(N).fill(0);
-
   girarBtn.addEventListener("click", () => {
     if (girando) return;
     girando = true;
     girarBtn.disabled = true;
 
+    // Escogemos un ángulo aleatorio y vueltas entre 5 y 7
     const randomAng = Math.random() * 360;
     const vueltas   = 5 + Math.floor(Math.random() * 3);
     const deltaDeg  = vueltas * 360 + (180 - randomAng);
 
-    // reset sin animación
+    // Reiniciamos sin animación a la posición base
     ruleta.style.transition = "none";
     ruleta.style.transform  = `rotate(${anguloBase}deg)`;
-    void ruleta.offsetWidth;
+    void ruleta.offsetWidth; // forzar reflow
 
-    // con transición CSS
+    // Con la transición CSS definida (5s), giramos deltaDeg
     ruleta.style.transition = "";
     ruleta.style.transform  = `rotate(${anguloBase + deltaDeg}deg)`;
   });
 
   ruleta.addEventListener("transitionend", () => {
-    // 1) Actualiza base
-    const finalAng = getRotationAngle(ruleta);
-    anguloBase     = finalAng;
+    // 1) Actualizamos la base al ángulo real final
+    const finalAng  = getRotationAngle(ruleta);
+    anguloBase      = finalAng;
 
-    // 2) calcula índice
-    let raw = (180 - finalAng + 360) % 360;
-    const idx = Math.floor(raw / degSeg);
+    // 2) Calculamos la posición relativa al punto de la flecha (180°)
+    let raw    = (180 - finalAng + 360) % 360;
+    const posInSeg = raw % degSeg;
+    const margin   = degSeg * 0.1;   // 10% de tolerancia
 
-    // 3) Si ya salió 2 veces → tentativa inválida
-    if (counts[idx] >= 2) {
-      lis[idx].classList.add('unavailable');
+    // 3) Si cae en el límite de un segmento, pedimos que intente de nuevo
+    if (posInSeg < margin || posInSeg > degSeg - margin) {
       Swal.fire({
-        icon: 'warning',
-        title: 'Premio no disponible',
-        text: 'Tienes otro intento.',
+        icon: 'info',
+        title: '¡Casi…!',
+        text: 'Vuelve a intentarlo',
         confirmButtonText: 'OK'
       }).then(() => {
         girando = false;
@@ -67,14 +66,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // 4) Premio válido: contamos y tachamos si llegó a 2
-    counts[idx]++;
-    if (counts[idx] === 2) {
-      lis[idx].classList.add('unavailable');
-    }
-
-    // 5) Mostramos premio con confeti
+    // 4) Si no, determinamos el índice y mostramos el premio
+    const idx        = Math.floor(raw / degSeg);
     const premioText = premios[idx];
+
     Swal.fire({
       background: '#fff',
       html: `
@@ -90,38 +85,15 @@ document.addEventListener("DOMContentLoaded", () => {
       `,
       confirmButtonText: '¡Genial!',
       didOpen: () => {
-        confetti({ particleCount: 300, spread: 60, origin: { y: 0.4 } });
+        confetti({
+          particleCount: 300,
+          spread: 60,
+          origin: { y: 0.4 }
+        });
       }
     }).then(() => {
-      // 6) Tras cerrar, comprobamos si ya no queda ninguno disponible
-      const todosTachados = lis.every(li => li.classList.contains('unavailable'));
-      if (todosTachados) {
-        Swal.fire({
-          background: '#fff',
-          html: `
-            <div style="
-              font-size: 2.5rem;
-              font-weight: 800;
-              color: #ff7043;
-              text-align: center;
-              text-transform: uppercase;
-            ">
-              🎊 Gracias por participar en la Ruleta Vipizza
-            </div>
-          `,
-          showConfirmButton: false,
-          timer: 3000,
-          didOpen: () => {
-            confetti({ particleCount: 500, spread: 100, origin: { y: 0.4 } });
-          }
-        });
-        // deshabilitar definitivamente
-        girarBtn.disabled = true;
-      } else {
-        // 7) si quedan premios, reactivar botón
-        girando = false;
-        girarBtn.disabled = false;
-      }
+      girando = false;
+      girarBtn.disabled = false;
     });
   });
 });
