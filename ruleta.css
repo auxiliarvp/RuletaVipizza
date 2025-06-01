@@ -287,8 +287,94 @@ body {
   border-radius: 4px;                 /* esquinas suaves */
 }
 
-/* Premio tachado tras 2 apariciones */
-.premios-list li.unavailable {
-  text-decoration: line-through;
-  opacity: 0.6;
+/* === Responsive para móviles === */
+@media screen and (max-width: 600px) {
+  /* 1) .app-container en columna y sin altura fija */
+  .app-container {
+    flex-direction: column;
+    height: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    gap: 16px; /* menos espacio entre bloques */
+  }
+
+  /* 2) El contenedor de la ruleta baja su margen derecho y gana margen inferior */
+  .ruleta-container {
+    margin-right: 0 !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* 3) La info-container quita su margen izquierdo */
+  .info-container {
+    margin-left: 0 !important;
+  }
+
+  /* 4) Reducir el max-width de la info para que no se extienda demasiado */
+  .info-container {
+    max-width: 90%;
+  }
+
+  /* 5) Ajustes extra en títulos y listas */
+  .premios-list h2 {
+    font-size: 6vw;   /* ligera reducción adicional */
+    margin-bottom: 10px;
+  }
+  .premios-list h2::after {
+    width: 30px;
+    height: 3px;
+  }
+
+  .premios-list li {
+    font-size: 4vw;      /* un poco más pequeño */
+    padding: 8px 12px;
+    padding-left: 45px;  /* ajustado para el indicador numérico */
+    margin-bottom: 8px;
+  }
+  .premios-list li::before {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+    left: 0;
+  }
+
+  /* 6) Botón Girar más compacto */
+  #girarBtn {
+    font-size: 4.5vw;
+    padding: 10px 28px;
+    border-radius: 24px;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  /* 7) Si la pantalla es muy estrecha, reducimos un poco más */
+  .ruleta {
+    width: 95vw;
+    height: 95vw;
+  }
+  
+  .flecha {
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 25px solid #ff7043;
+  }
+  .centro {
+    width: 15vw;
+    height: 15vw;
+  }
+  .ruleta .label span {
+    font-size: 6vw;
+  }
+  .premios-list li {
+    font-size: 3vw;
+    padding-left: 40px;
+  }
+  .premios-list li::before {
+    width: 24px;
+    height: 24px;
+    font-size: 0.8rem;
+  }
+  #girarBtn {
+    font-size: 4vw;
+    padding: 8px 20px;
+  }
 }

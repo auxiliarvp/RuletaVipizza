@@ -8,8 +8,15 @@
 <body>
   <div class="app-container">
 
-    <!-- Sección izquierda: ruleta -->
-    <div class="ruleta-container">
+    <!-- Sección izquierda: ruleta (escalada y centrada) -->
+    <div
+      class="ruleta-container"
+      style="
+        transform: scale(0.6);
+        transform-origin: center center;
+        margin: 0 auto;
+      "
+    >
       <div class="ruleta" id="ruleta">
         <div class="label" style="--i:0;"><span>1</span></div>
         <div class="label" style="--i:1;"><span>2</span></div>
@@ -28,8 +35,13 @@
       </div>
     </div>
 
-    <!-- Sección derecha: lista de premios y botón -->
-    <div class="info-container">
+    <!-- Sección derecha: lista de premios y botón (más pequeña) -->
+    <div
+      class="info-container"
+      style="
+        transform: scale(0.8); transform-origin: center center; margin-left: -3rem;
+      "
+    >
       <ol class="premios-list">
         <h2>Premios</h2>
         <li>2 x 1</li>
